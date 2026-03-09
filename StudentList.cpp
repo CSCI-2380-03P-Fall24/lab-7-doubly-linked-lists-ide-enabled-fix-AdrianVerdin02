@@ -1,18 +1,55 @@
 	#include "StudentList.h"
 
 	// Define a constructor to initialize the list. The list starts with no Students
-    StudentList::StudentList() {}
+    StudentList::StudentList() {
+		
+		head = nullptr;
+		tail = nullptr;
+		numStudents = 0;
+	}
 
 	// return the number of students currently in the list
 	int StudentList::listSize() {
-		return -1;
+		return numStudents;
 	}
 
 	//add a Node with a student to the front (head) of the list.
-	void StudentList::addFront(Student s) {}
+	void StudentList::addFront(Student s) {
+		Node* newNode = new Node(s);
+		newNode->next = nullptr;
+		newNode->prev = nullptr;
+
+		if(head == nullptr) {
+			head = newNode;
+			tail = newNode;
+		}
+		else {
+			newNode->next = head;
+			head->prev = newNode;
+			head = newNode;
+		}
+
+		numStudents++;
+	}
 
 	//add a Node with a student to the back (tail) of the list.
-	void StudentList::addBack(Student s) {}
+	void StudentList::addBack(Student s) {
+		Node* newNode = new Node(s);
+		newNode->next = nullptr;
+		newNode->prev = nullptr;
+
+		if(head == nullptr) {
+			head = newNode;
+			tail = newNode;
+		}
+		else {
+			newNode->prev = tail;
+			tail->next = newNode;
+			tail = newNode;
+		}
+		
+		numStudents++;
+	}
 
 	//Print out the names of each student in the list.
 	void StudentList::printList() {}
