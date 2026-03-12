@@ -52,17 +52,46 @@
 	}
 
 	//Print out the names of each student in the list.
-	void StudentList::printList() {}
+	void StudentList::printList() {
+
+		Node *current = head;
+
+		while(current != nullptr) {
+			cout << current << " ";
+			
+			current = current->next;
+		}
+	}
 
 	// Remove the Node with the student at the back (tail) of the list
 	// should not fail if list is empty! Print an error message if this occurs
 	// Don't forget that your head and tail pointers will be null pointers if the list is empty
-	void StudentList::popBack() {}
+	void StudentList::popBack() {
+		if (tail == nullptr) {
+			cout << "error" << endl;
+		}
+		else {
+			Node *temp = tail;
+			tail = tail->prev;
+			delete temp;
+			numStudents--;
+		}
+	}
 
 	// Remove the Node with the student at the front (head) of the list
 	// should not fail if list is empty! Print an error message if this occurs
 	// Don't forget that your head and tail pointers will be null pointers if the list is empty
-	void StudentList::popFront() {}
+	void StudentList::popFront() {
+		if (head == nullptr) {
+			cout << "error" << endl;
+		}
+		else {
+			Node *temp = head;
+			head = head->next;
+			delete temp;
+			numStudents--;
+		}
+	}
 
 	//insert a student at the position "index".
 	// for this list, count head as index 0
@@ -70,7 +99,27 @@
 	// print a message and insert the student at the back of the list
 	// the previous Node at your target index should be moved forward. "For exampe, Node with student at index i, becomes index i+1" 
 	// Remember that you already have methods that can add students to the front or back of list if needed! Don't repeat this code.
-	void StudentList::insertStudent(Student s, int index) {}
+	void StudentList::insertStudent(Student s, int index) {
+		Node *newNode = new Node(s);
+		newNode->next = nullptr;
+		newNode->prev = nullptr;
+
+		if (index >= numStudents) {
+			newNode->prev = tail;
+			tail->next = newNode;
+			tail = newNode;
+		}
+		else {
+			Node *current = head;
+			for (int i = 0; i < index-1; i++) {
+				current = current->next;
+			}
+			newNode->prev = current->prev;
+			newNode->next = current->next;
+			current->prev = newNode;
+		}
+		numStudents++;
+	}
 
 	//find the student with the given id number and return them
 	// if no student matches, print a message 
