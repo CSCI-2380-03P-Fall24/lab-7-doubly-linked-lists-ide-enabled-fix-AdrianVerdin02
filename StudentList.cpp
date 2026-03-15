@@ -114,9 +114,16 @@
 			for (int i = 0; i < index-1; i++) {
 				current = current->next;
 			}
-			newNode->prev = current->prev;
-			newNode->next = current->next;
-			current->prev = newNode;
+			if (current == head) {
+				head->prev = newNode;
+				newNode->next = head;
+				head = newNode;
+			}
+			else {
+				newNode->prev = current->prev;
+				newNode->next = current->next;
+				current->prev = newNode;
+			}
 		}
 		numStudents++;
 	}
@@ -125,16 +132,57 @@
 	// if no student matches, print a message 
 	// and create and return a dummy student object
 	Student StudentList::retrieveStudent(int idNum) {
-		Student fixthis;
-		return fixthis;
+
+		Node *current = head;
+		Student match;
+
+		while (current != nullptr) {
+			if (current->data.id == idNum){
+				match = current->data;
+			}
+			current = current->next;
+		}
+		
+		return match;
 	}
 
 	// Remove a Node with a student from the list with a given id number
 	// If no student matches, print a message and do nothing
-	void StudentList::removeStudentById(int idNum) {}
+	void StudentList::removeStudentById(int idNum) {
+
+		Node *current = head;
+
+		while (current != nullptr) {
+			if (current->data.id == idNum) {
+				Node *temp = current;
+				if (current == head) {
+					head = current->next;
+				}
+				else {current->prev->next = current->next;
+				}
+				if (current == tail ) {
+					tail = current->prev;
+				}
+				else {current->next->prev = current->prev;
+				}
+				delete temp;
+				numStudents--;
+			}
+			current = current->next;
+		}
+	}
 
 	//Change the gpa of the student with given id number to newGPA
-	void StudentList::updateGPA(int idNum, float newGPA) {}
+	void StudentList::updateGPA(int idNum, float newGPA) {
+
+		Node *current = head;
+		while (current != nullptr) {
+			if (current->data.id == idNum) {
+				current->data.GPA = newGPA;
+			}
+			current = current->next;
+		}
+	}
 
 	//Add all students from otherList to this list.
 	//otherlist should be empty after this operation.
@@ -147,14 +195,51 @@
 	s1 <-> s2 <-> s3 <-> s4 <-> s5
 	and otherList should be empty and have zero students.
 	*/
-	void StudentList::mergeList(StudentList &otherList) {}
+	void StudentList::mergeList(StudentList &otherList) {
+		Node *current = otherList.head;
+
+		if (head == nullptr ) {
+			head = current;
+			tail = current;
+			numStudents++;
+		}
+		else {
+			while(current != nullptr) {
+				current->prev = tail;
+				tail->next = current;
+				tail = current;
+				current = current->next;			
+			}
+		}
+		numStudents += otherList.numStudents;
+		otherList.head = nullptr;
+		otherList.tail = nullptr;
+		otherList.numStudents = 0;
+		
+	}
 
 	//create a StudentList of students whose gpa is at least minGPA.
 	//Return this list.  The original (current) list should
 	//not be modified (do not remove the students from the original list).
 	StudentList StudentList::honorRoll(float minGPA) {
-		StudentList fixthis;
-		return fixthis;
+		StudentList honor;
+		honor.head = nullptr;
+		honor.tail = nullptr;
+		honor.numStudents = 0;
+
+		Node *current = head;
+
+		while (current != nullptr) {
+			cout << current->data.GPA << " ";
+			if (current->data.GPA >= minGPA) {
+				honor.addBack(current->data);
+			}
+			
+			
+			current = current->next;
+		}
+			
+		return honor;
 	}
 
 	//remove all students whose GPA is below a given threshold.
@@ -163,4 +248,27 @@
 	// Be sure to correctly update both head and tail pointers when removing 
 	// from the front or back, and adjust numStudents accordingly.
 	// If the list is empty, print a message and do nothing.
-	void StudentList::removeBelowGPA(float threshold) {}
+	void StudentList::removeBelowGPA(float threshold) {
+		Node *current = head;
+
+		while (current != nullptr) {
+			if (current->data.GPA < threshold) {
+				Node *temp = current;
+				if (current == head) {
+					head = current->next;
+				}
+				else {
+					current->prev->next = current->next;
+				}
+				if (current == tail ) {
+					tail = current->prev;
+				}
+				else {
+					current->next->prev = current->prev;
+				}
+				delete temp;
+				numStudents--;
+			}
+			current = current->next;
+		}
+	}
